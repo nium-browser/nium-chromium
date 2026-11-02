@@ -1,0 +1,38 @@
+name: 'Nium prepare'
+description: 'Python, Windows SDK 10.0.28000 e dependências da etapa'
+runs:
+  using: composite
+  steps:
+    - name: Marca o início da etapa
+      shell: pwsh
+      run: |
+        "NIUM_JOB_START=$([DateTimeOffset]::UtcNow.ToUnixTimeSeconds())" >> $env:GITHUB_ENV
+        git config --global core.longpaths true
+        Get-PSDrive -PSProvider FileSystem | Format-Table Name, Used, Free
+
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Dependências da etapa
+      shell: pwsh
+      run: npm install --no-audit --no-fund
+      working-directory: ./.github/actions/stage
+
+    # O Chromium atual pede o Windows SDK 10.0.28000 (a máquina do GitHub vem com um mais antigo).
+    # Mesmo passo usado pelo ungoogled-chromium-windows.
+    - name: Windows SDK 10.0.28000
+      shell: pwsh
+      run: |
+        if (Test-Path 'C:\Program Files (x86)\Windows Kits\10\Include\10.0.28000.0') {
+          Write-Host 'SDK 10.0.28000.0 já instalado.'
+          exit 0
+        }
+        $installer = "$env:TEMP\winsdksetup.exe"
+        Invoke-WebRequest -Uri 'https://download.microsoft.com/download/38ab8f6d-3676-4860-ae84-3361308b9d7f/KIT_BUNDLE_WINDOWSSDK_MEDIACREATION/winsdksetup.exe' -OutFile $installer
+        $features = '/features OptionId.DesktopCPPx64 OptionId.DesktopCPPx86 OptionId.WindowsDesktopDebuggers OptionId.SigningTools /q /norestart /ceip off'
+        $proc = Start-Process -FilePath $installer -ArgumentList $features -PassThru -Wait
+        if ($proc.ExitCode -ne 0) { throw "winsdksetup.exe falhou com código $($proc.ExitCode)" }
+        if (-not (Test-Path 'C:\Program Files (x86)\Windows Kits\10\Include\10.0.28000.0')) {
+          throw 'SDK 10.0.28000.0 não encontrado depois da instalação.'
+        }

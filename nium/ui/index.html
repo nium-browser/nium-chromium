@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nium — ponte</title>
+<link rel="stylesheet" href="bridge-test.css">
+</head>
+<body>
+<main>
+  <h1>Nium <span id="status">conectando…</span></h1>
+  <p class="lead">Página de teste da Fase 2: a interface do Nium carregada de uma pasta e conversando com o C++.</p>
+  <section>
+    <h2>1. Versão</h2>
+    <p id="version">—</p>
+  </section>
+  <section>
+    <h2>2. Abrir aba</h2>
+    <form id="open-form"><input id="open-url" value="https://www.youtube.com" spellcheck="false"><button>Abrir em nova aba</button></form>
+  </section>
+  <section>
+    <h2>3. Guardar e ler dados</h2>
+    <form id="store-form"><input id="store-text" placeholder="Escreva algo e salve"><button>Salvar</button></form>
+    <p>Salvo no perfil: <strong id="store-value">—</strong></p>
+    <p class="hint">Feche e abra o Nium: o texto tem que continuar aqui.</p>
+  </section>
+  <section>
+    <h2>4. Edição sem compilar</h2>
+    <p class="hint">Mude qualquer texto em <code>nium\ui\index.html</code>, salve e aperte F5 nesta página.</p>
+  </section>
+  <p id="error" role="alert"></p>
+</main>
+<script src="bridge.js"></script>
+<script src="bridge-test.js"></script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+# Nium — chrome://nium: the Nium interface (HTML/CSS/JS from a folder) and its bridge to C++.
+source_set("nium_ui") {
+  sources = [
+    "nium_handler.cc",
+    "nium_handler.h",
+    "nium_tabs_bridge.cc",
+    "nium_tabs_bridge.h",
+    "nium_ui.cc",
+    "nium_ui.h",
+  ]
+  public_deps = [
+    "//content/public/browser",
+    "//content/public/common",
+  ]
+  deps = [
+    "//base",
+    "//chrome/browser/profiles:profile",
+    "//components/version_info",
+    "//ui/base",
+    "//url",
+  ]
+}

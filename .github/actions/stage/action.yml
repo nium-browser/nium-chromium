@@ -1,0 +1,15 @@
+name: 'Nium stage'
+description: 'Uma etapa da compilação do Nium (continua de onde a anterior parou)'
+inputs:
+  finished:
+    description: 'true se uma etapa anterior já terminou a compilação'
+    required: true
+  from_artifact:
+    description: 'true para continuar do progresso salvo pela etapa anterior'
+    required: true
+outputs:
+  finished:
+    description: 'true quando a compilação terminou nesta etapa ou antes'
+runs:
+  using: 'node24'
+  main: 'index.js'

@@ -1,0 +1,66 @@
+/* Nium — barra lateral (mesmas cores da versão Electron). */
+:root{
+  --font:"Segoe UI Variable Text","Segoe UI",system-ui,sans-serif;
+  --frame:#e9e9eb;--ink:#1d1d1f;--ink-2:#3a3a3d;--muted:#6b6b70;--dim:#9a9aa0;
+  --hover:rgba(0,0,0,.05);--press:rgba(0,0,0,.085);--line:rgba(0,0,0,.07);
+  --tab-active:#ffffff;--tab-active-ink:#1d1d1f;--accent:#3f5f8a;
+  --active-shadow:0 0 0 1px rgba(0,0,0,.06),0 1px 2px rgba(16,24,40,.08);
+  --ease:cubic-bezier(.2,.8,.2,1);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --frame:#171719;--ink:#ececee;--ink-2:#c8c8cc;--muted:#97979d;--dim:#68686d;
+    --hover:rgba(255,255,255,.055);--press:rgba(255,255,255,.09);--line:rgba(255,255,255,.06);
+    --tab-active:#2a2a2d;--tab-active-ink:#f2f2f4;--accent:#9fb3cf;
+    --active-shadow:0 0 0 1px rgba(255,255,255,.06),0 1px 2px rgba(0,0,0,.4);
+  }
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{
+  display:flex;flex-direction:column;background:var(--frame);color:var(--ink);
+  font:13px/1.3 var(--font);user-select:none;overflow:hidden;
+}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:default}
+
+/* Faixa de cima: arrasta a janela (o C++ trata os primeiros 40px como barra de título). */
+.brand{height:40px;flex:none;display:flex;align-items:center;gap:8px;padding:0 16px}
+.brand-mark{width:16px;height:16px;border-radius:5px;background:linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 55%,#fff))}
+.brand-name{font-weight:600;font-size:13px;color:var(--ink-2);letter-spacing:.01em}
+
+.new-tab{
+  margin:2px 8px 6px;height:34px;flex:none;display:flex;align-items:center;gap:10px;
+  padding:0 10px;border-radius:8px;color:var(--muted);transition:background .12s var(--ease),color .12s;
+}
+.new-tab:hover{background:var(--hover);color:var(--ink)}
+.new-tab:active{background:var(--press)}
+.new-tab svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round}
+
+.tabs{flex:1;overflow-y:auto;overflow-x:hidden;padding:0 8px 12px;scrollbar-width:thin}
+.tab{
+  position:relative;height:34px;display:flex;align-items:center;gap:10px;padding:0 6px 0 10px;
+  margin-bottom:2px;border-radius:8px;color:var(--ink-2);
+  transition:background .12s var(--ease),box-shadow .12s,transform .16s var(--ease);
+}
+.tab:hover{background:var(--hover)}
+.tab.active{background:var(--tab-active);color:var(--tab-active-ink);box-shadow:var(--active-shadow)}
+.tab.dragging{z-index:2;transition:none;box-shadow:0 6px 18px -6px rgba(0,0,0,.35),var(--active-shadow);background:var(--tab-active)}
+.tab.pinned .tab-title{font-weight:600}
+.tab-icon{width:16px;height:16px;flex:none;display:grid;place-items:center}
+.tab-icon img{width:16px;height:16px}
+.tab-icon .globe{width:14px;height:14px;border-radius:50%;border:1.5px solid var(--dim)}
+.tab-icon .spinner{width:14px;height:14px;border-radius:50%;border:2px solid var(--line);border-top-color:var(--accent);animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.tab-title{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tab-close{
+  width:22px;height:22px;flex:none;display:grid;place-items:center;border-radius:6px;
+  color:var(--muted);opacity:0;transition:opacity .1s,background .1s;
+}
+.tab:hover .tab-close,.tab.active .tab-close{opacity:1}
+.tab-close:hover{background:var(--press);color:var(--ink)}
+.tab-close svg{width:10px;height:10px;stroke:currentColor;stroke-width:1.6;stroke-linecap:round}
+.tab.pinned .tab-close{display:none}
+.separator{height:1px;background:var(--line);margin:6px 6px 8px}
+
+.status{margin:12px 16px;color:var(--muted);font-size:12px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}

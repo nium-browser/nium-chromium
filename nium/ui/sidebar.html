@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Nium — barra lateral</title>
+<meta name="color-scheme" content="light dark">
+<link rel="stylesheet" href="sidebar.css">
+</head>
+<body>
+<header class="brand" aria-hidden="true">
+  <span class="brand-mark"></span><span class="brand-name">Nium</span>
+</header>
+<button type="button" class="new-tab" id="new-tab" title="Nova aba (Ctrl+T)">
+  <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10"/></svg>
+  <span>Nova aba</span>
+</button>
+<nav class="tabs" id="tabs" aria-label="Abas"></nav>
+<p class="status" id="status" hidden></p>
+<script src="bridge.js"></script>
+<script src="sidebar.js"></script>
+</body>
+</html>

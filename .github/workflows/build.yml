@@ -1,0 +1,250 @@
+# GERADO por ci/make_workflow.py — edite lá.
+# Compila o Nium para Windows em etapas de até 6 h (limite do GitHub). Cada etapa continua de onde
+# a anterior parou; a que terminar envia o zip, e "publish" cria uma Release para baixar.
+name: build-windows
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-windows
+  cancel-in-progress: false
+
+jobs:
+  stage-1:
+    runs-on: windows-2022
+    timeout-minutes: 358
+    outputs:
+      finished: ${{ steps.stage.outputs.finished }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/prepare
+      - name: Compilar
+        id: stage
+        uses: ./.github/actions/stage
+        with:
+          finished: false
+          from_artifact: false
+  stage-2:
+    needs: stage-1
+    runs-on: windows-2022
+    timeout-minutes: 358
+    outputs:
+      finished: ${{ steps.stage.outputs.finished || needs.stage-1.outputs.finished }}
+    steps:
+      - uses: actions/checkout@v4
+        if: needs.stage-1.outputs.finished != 'true'
+      - uses: ./.github/actions/prepare
+        if: needs.stage-1.outputs.finished != 'true'
+      - name: Compilar
+        id: stage
+        if: needs.stage-1.outputs.finished != 'true'
+        uses: ./.github/actions/stage
+        with:
+          finished: false
+          from_artifact: true
+  stage-3:
+    needs: stage-2
+    runs-on: windows-2022
+    timeout-minutes: 358
+    outputs:
+      finished: ${{ steps.stage.outputs.finished || needs.stage-2.outputs.finished }}
+    steps:
+      - uses: actions/checkout@v4
+        if: needs.stage-2.outputs.finished != 'true'
+      - uses: ./.github/actions/prepare
+        if: needs.stage-2.outputs.finished != 'true'
+      - name: Compilar
+        id: stage
+        if: needs.stage-2.outputs.finished != 'true'
+        uses: ./.github/actions/stage
+        with:
+          finished: false
+          from_artifact: true
+  stage-4:
+    needs: stage-3
+    runs-on: windows-2022
+    timeout-minutes: 358
+    outputs:
+      finished: ${{ steps.stage.outputs.finished || needs.stage-3.outputs.finished }}
+    steps:
+      - uses: actions/checkout@v4
+        if: needs.stage-3.outputs.finished != 'true'
+      - uses: ./.github/actions/prepare
+        if: needs.stage-3.outputs.finished != 'true'
+      - name: Compilar
+        id: stage
+        if: needs.stage-3.outputs.finished != 'true'
+        uses: ./.github/actions/stage
+        with:
+          finished: false
+          from_artifact: true
+  stage-5:
+    needs: stage-4
+    runs-on: windows-2022
+    timeout-minutes: 358
+    outputs:
+      finished: ${{ steps.stage.outputs.finished || needs.stage-4.outputs.finished }}
+    steps:
+      - uses: actions/checkout@v4
+        if: needs.stage-4.outputs.finished != 'true'
+      - uses: ./.github/actions/prepare
+        if: needs.stage-4.outputs.finished != 'true'
+      - name: Compilar
+        id: stage
+        if: needs.stage-4.outputs.finished != 'true'
+        uses: ./.github/actions/stage
+        with:
+          finished: false
+          from_artifact: true
+  stage-6:
+    needs: stage-5
+    runs-on: windows-2022
+    timeout-minutes: 358
+    outputs:
+      finished: ${{ steps.stage.outputs.finished || needs.stage-5.outputs.finished }}
+    steps:
+      - uses: actions/checkout@v4
+        if: needs.stage-5.outputs.finished != 'true'
+      - uses: ./.github/actions/prepare
+        if: needs.stage-5.outputs.finished != 'true'
+      - name: Compilar
+        id: stage
+        if: needs.stage-5.outputs.finished != 'true'
+        uses: ./.github/actions/stage
+        with:
+          finished: false
+          from_artifact: true
+  stage-7:
+    needs: stage-6
+    runs-on: windows-2022
+    timeout-minutes: 358
+    outputs:
+      finished: ${{ steps.stage.outputs.finished || needs.stage-6.outputs.finished }}
+    steps:
+      - uses: actions/checkout@v4
+        if: needs.stage-6.outputs.finished != 'true'
+      - uses: ./.github/actions/prepare
+        if: needs.stage-6.outputs.finished != 'true'
+      - name: Compilar
+        id: stage
+        if: needs.stage-6.outputs.finished != 'true'
+        uses: ./.github/actions/stage
+        with:
+          finished: false
+          from_artifact: true
+  stage-8:
+    needs: stage-7
+    runs-on: windows-2022
+    timeout-minutes: 358
+    outputs:
+      finished: ${{ steps.stage.outputs.finished || needs.stage-7.outputs.finished }}
+    steps:
+      - uses: actions/checkout@v4
+        if: needs.stage-7.outputs.finished != 'true'
+      - uses: ./.github/actions/prepare
+        if: needs.stage-7.outputs.finished != 'true'
+      - name: Compilar
+        id: stage
+        if: needs.stage-7.outputs.finished != 'true'
+        uses: ./.github/actions/stage
+        with:
+          finished: false
+          from_artifact: true
+  stage-9:
+    needs: stage-8
+    runs-on: windows-2022
+    timeout-minutes: 358
+    outputs:
+      finished: ${{ steps.stage.outputs.finished || needs.stage-8.outputs.finished }}
+    steps:
+      - uses: actions/checkout@v4
+        if: needs.stage-8.outputs.finished != 'true'
+      - uses: ./.github/actions/prepare
+        if: needs.stage-8.outputs.finished != 'true'
+      - name: Compilar
+        id: stage
+        if: needs.stage-8.outputs.finished != 'true'
+        uses: ./.github/actions/stage
+        with:
+          finished: false
+          from_artifact: true
+  stage-10:
+    needs: stage-9
+    runs-on: windows-2022
+    timeout-minutes: 358
+    outputs:
+      finished: ${{ steps.stage.outputs.finished || needs.stage-9.outputs.finished }}
+    steps:
+      - uses: actions/checkout@v4
+        if: needs.stage-9.outputs.finished != 'true'
+      - uses: ./.github/actions/prepare
+        if: needs.stage-9.outputs.finished != 'true'
+      - name: Compilar
+        id: stage
+        if: needs.stage-9.outputs.finished != 'true'
+        uses: ./.github/actions/stage
+        with:
+          finished: false
+          from_artifact: true
+  stage-11:
+    needs: stage-10
+    runs-on: windows-2022
+    timeout-minutes: 358
+    outputs:
+      finished: ${{ steps.stage.outputs.finished || needs.stage-10.outputs.finished }}
+    steps:
+      - uses: actions/checkout@v4
+        if: needs.stage-10.outputs.finished != 'true'
+      - uses: ./.github/actions/prepare
+        if: needs.stage-10.outputs.finished != 'true'
+      - name: Compilar
+        id: stage
+        if: needs.stage-10.outputs.finished != 'true'
+        uses: ./.github/actions/stage
+        with:
+          finished: false
+          from_artifact: true
+  stage-12:
+    needs: stage-11
+    runs-on: windows-2022
+    timeout-minutes: 358
+    outputs:
+      finished: ${{ steps.stage.outputs.finished || needs.stage-11.outputs.finished }}
+    steps:
+      - uses: actions/checkout@v4
+        if: needs.stage-11.outputs.finished != 'true'
+      - uses: ./.github/actions/prepare
+        if: needs.stage-11.outputs.finished != 'true'
+      - name: Compilar
+        id: stage
+        if: needs.stage-11.outputs.finished != 'true'
+        uses: ./.github/actions/stage
+        with:
+          finished: false
+          from_artifact: true
+  publish:
+    needs: stage-12
+    if: needs.stage-12.outputs.finished == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: nium-windows
+          path: dist
+      - name: Criar Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="build-${{ github.run_number }}"
+          gh release create "$tag" dist/*.zip --repo "${{ github.repository }}" \
+            --target "${{ github.sha }}" --prerelease \
+            --title "Nium (compilação ${{ github.run_number }})" \
+            --notes "Compilado de ${{ github.sha }}. Descompacte e abra chrome.exe."
