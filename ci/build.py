@@ -69,7 +69,16 @@ def checkout():
   if not (SRC / 'BUILD.gn').exists():
     run(f'git -c core.longpaths=true clone --depth 1 --branch {VERSION} '
         f'https://chromium.googlesource.com/chromium/src.git src')
-  run('gclient sync -D --no-history --shallow -j 8')
+  # O servidor do Chromium às vezes responde erro 500 no meio do download: tenta de novo.
+  for attempt in range(1, 5):
+    try:
+      run('gclient sync -D --no-history --shallow -j 8')
+      return
+    except subprocess.CalledProcessError:
+      if attempt == 4:
+        raise
+      say(f'gclient sync falhou (tentativa {attempt}); tentando de novo em 1 minuto')
+      time.sleep(60)
 
 
 def apply_nium():
