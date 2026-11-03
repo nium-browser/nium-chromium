@@ -20,3 +20,6 @@ Chromium usada está em `ci/CHROMIUM_VERSION`.
 ## Mexer na interface sem compilar
 A interface do Nium (`nium/ui`) é HTML/CSS/JS. No zip ela fica na pasta `nium_ui` ao lado do
 `chrome.exe`: edite lá e reabra o Nium. Para testar uma pasta sua: `chrome.exe --nium-ui-dir=<pasta>`.
+
+## Licença
+O código do Nium está sob a [Mozilla Public License 2.0](LICENSE). O Chromium e os demais componentes seguem as próprias licenças. O nome e o logotipo do Nium não fazem parte da licença.
