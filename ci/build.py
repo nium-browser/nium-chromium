@@ -92,7 +92,13 @@ def build(deadline):
     say('sem tempo para compilar nesta etapa')
     return TIMEOUT_EXIT
   say(f'compilando por até {remaining / 3600:.1f} h')
-  proc = subprocess.Popen('autoninja -C out\\Nium chrome -j 3', cwd=SRC, env=env(), shell=True,
+  # Ninja direto (como o ungoogled-chromium): ele decide o que recompilar pela data dos arquivos,
+  # que o zip entre as etapas preserva. O siso (padrão do autoninja) recompilava tudo a cada etapa,
+  # porque a máquina nova do GitHub muda o ambiente do Visual Studio que ele leva em conta.
+  ninja = SRC / 'third_party' / 'ninja' / 'ninja.exe'
+  command = f'"{ninja}" -C out\\Nium chrome -j 3' if ninja.exists() else 'autoninja -C out\\Nium chrome -j 3'
+  say('> ' + command)
+  proc = subprocess.Popen(command, cwd=SRC, env=env(), shell=True,
                           creationflags=subprocess.CREATE_NEW_PROCESS_GROUP)
   try:
     return proc.wait(timeout=remaining)
