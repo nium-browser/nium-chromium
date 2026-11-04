@@ -69,16 +69,33 @@ def checkout():
   if not (SRC / 'BUILD.gn').exists():
     run(f'git -c core.longpaths=true clone --depth 1 --branch {VERSION} '
         f'https://chromium.googlesource.com/chromium/src.git src')
-  # O servidor do Chromium às vezes responde erro 500 no meio do download: tenta de novo.
-  for attempt in range(1, 5):
+  # O servidor do Chromium às vezes responde erro 500 no meio do download. O gclient então move a
+  # pasta quebrada para _bad_scm e pode terminar "com sucesso" sem ela. Repete até ficar completo.
+  bad = ROOT / '_bad_scm'
+  for attempt in range(1, 7):
+    ok = True
     try:
-      run('gclient sync -D --no-history --shallow -j 8')
-      return
+      run('gclient sync -D --no-history --shallow -j 4')
     except subprocess.CalledProcessError:
-      if attempt == 4:
-        raise
-      say(f'gclient sync falhou (tentativa {attempt}); tentando de novo em 1 minuto')
-      time.sleep(60)
+      ok = False
+    missing = [p for p in REQUIRED if not (SRC / p).exists()]
+    if ok and not bad.exists() and not missing:
+      return
+    say(f'download incompleto (tentativa {attempt}): ' + (', '.join(missing) or 'pasta _bad_scm / erro do servidor'))
+    if bad.exists():
+      shutil.rmtree(bad, ignore_errors=True)
+    if attempt == 6:
+      sys.exit('[nium] o servidor do Chromium não deixou baixar tudo; rode de novo mais tarde')
+    time.sleep(120)
+
+
+# Arquivos de dependências que já vieram faltando por erro do servidor (conferidos depois do sync).
+REQUIRED = [
+    'third_party/search_engines_data/resources/definitions/prepopulated_engines.json',
+    'third_party/clang-format/script',
+    'third_party/llvm-build/Release+Asserts/bin/clang-cl.exe',
+    'third_party/ninja/ninja.exe',
+]
 
 
 def apply_nium():
